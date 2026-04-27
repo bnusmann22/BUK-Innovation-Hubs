@@ -1,18 +1,18 @@
 import express, { Request, Response } from 'express';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
 
 // Routes
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Welcome to the Backend API' });
+  res.send({ message: 'Welcome to the Backend API' });
 });
 
 app.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.send({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 app.get('/users', (req: Request, res: Response) => {
