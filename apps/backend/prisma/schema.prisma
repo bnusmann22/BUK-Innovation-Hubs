@@ -5,3 +5,189 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// 
+// ENUMS
+//
+
+enum Role {
+  SUPER_ADMIN
+  HUB_MANAGER
+  CONTENT_MANAGER
+  PROGRAM_OFFICER
+  QA_ADMIN_SUPPORT
+}
+
+enum ProgramType {
+  TRAINING
+  INCUBATION
+  HACKATHON
+  WORKSHOP
+  FELLOWSHIP
+  COMPETITION
+  MENTORSHIP
+  GRANT
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EventType {
+  WORKSHOP
+  SEMINAR
+  GUEST_LECTURE
+  HACKATHON
+  DEMO_DAY
+  STARTUP_SHOWCASE
+}
+
+enum InquiryStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+// 
+// USER (Admin System)
+// 
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CONTENT_MANAGER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  managedHub Hub? @relation("HubManager")
+
+  @@map("users")
+}
+
+// 
+// HUB
+// Each hub represents a regional center that manages its own programs and events.
+
+model Hub {
+  id           String   @id @default(uuid())
+  name         String
+  slug         String   @unique
+  description  String
+  focusArea    String
+  contactEmail String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // relations
+  managerId String?  @unique
+  manager   User?    @relation("HubManager", fields: [managerId], references: [id])
+  programs  Program[]
+  events    Event[]
+
+  @@map("hubs")
+}
+
+model Program {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  type        ProgramType
+  deadline    DateTime
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // relations
+  hubId         String
+  hub           Hub                   @relation(fields: [hubId], references: [id])
+  registrations ProgramRegistration[]
+
+  @@map("programs")
+}
+
+model ProgramRegistration {
+  id        String            @id @default(uuid())
+  fullName  String
+  email     String
+  phone     String?
+  status    ApplicationStatus @default(PENDING)
+  documents String[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  // relations
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+
+  @@map("program_registrations")
+}
+
+model Event {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  type        EventType
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // relations
+  hubId         String?
+  hub           Hub?                @relation(fields: [hubId], references: [id])
+  registrations EventRegistration[]
+
+  @@map("events")
+}
+
+model EventRegistration {
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String
+  phone     String?
+  createdAt DateTime @default(now())
+
+  // relations
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@map("event_registrations")
+}
+
+model NewsletterSubscriber {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  isVerified        Boolean  @default(false)
+  verificationToken String?
+  subPrograms       Boolean  @default(true)
+  subStartups       Boolean  @default(true)
+  subEvents         Boolean  @default(true)
+  subGrants         Boolean  @default(true)
+  subInternships    Boolean  @default(true)
+  subAnnouncements  Boolean  @default(true)
+  createdAt         DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
+model ContactInquiry {
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    InquiryStatus @default(OPEN)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("contact_inquiries")
+}
