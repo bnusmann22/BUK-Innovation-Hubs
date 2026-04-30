@@ -5,10 +5,12 @@ import env from "./config/env";
 import router from "./routes/index";
 import { errorHandler } from "./middlewares/error.middleware";
 import { AppError } from "./types/error";
+import { requestLogger } from "./middlewares/logger.middleware";
 
 const app = express();
 
 // middleware
+app.use(requestLogger);
 app.use(helmet());
 app.use(cors({ origin: env.CLIENT_URL }));
 app.use(express.json());
