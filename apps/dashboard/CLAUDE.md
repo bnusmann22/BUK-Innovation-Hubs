@@ -1,1 +1,7 @@
 @AGENTS.md
+
+SUPER ADMIN 
+  |
+  V
+
+Hub Manager -> CONTENT MANAGER && PROGRAM OFFICER

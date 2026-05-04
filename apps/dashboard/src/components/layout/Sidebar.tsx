@@ -2,6 +2,7 @@
 import Logo from "@repo/ui/logo";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Building2,
@@ -16,14 +17,14 @@ import {
 } from "lucide-react";
 
 const sidebarActions = [
-  { label: "Overview", icon: LayoutDashboard },
-  { label: "View Hubs", icon: Building2 },
-  { label: "Add Hub", icon: PlusSquare },
-  { label: "Manage Hubs", icon: Settings },
-  { label: "Newsletter", icon: Mail },
-  { label: "Events", icon: Calendar },
-  { label: "Reports", icon: BarChart3 },
-  { label: "Settings", icon: FileText },
+  { label: "Overview", icon: LayoutDashboard, href: "/dashboard" },
+  { label: "View Hubs", icon: Building2, href: "/dashboard/view-hubs" },
+  { label: "Add Hub", icon: PlusSquare, href: "/dashboard/add-hub" },
+  { label: "Manage Hubs", icon: Settings, href: "/dashboard/manage-hubs" },
+  { label: "Newsletter", icon: Mail, href: "/dashboard/newsletter" },
+  { label: "Events", icon: Calendar, href: "/dashboard/events" },
+  { label: "Reports", icon: BarChart3, href: "/dashboard/reports" },
+  { label: "Settings", icon: FileText, href: "/dashboard/settings" },
 ];
 
 export function Sidebar() {
@@ -58,8 +59,9 @@ export function Sidebar() {
               const Icon = item.icon;
 
               return (
-                <button
+                <Link
                   key={item.label}
+                  href={item.href}
                   className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-semibold transition
                   ${
                     index === 0
@@ -79,7 +81,7 @@ export function Sidebar() {
                       </span>
                     </>
                   )}
-                </button>
+                </Link>
               );
             })}
           </nav>

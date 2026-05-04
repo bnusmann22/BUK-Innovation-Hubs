@@ -14,9 +14,9 @@ datasource db {
 enum Role {
   SUPER_ADMIN
   HUB_MANAGER
-  CONTENT_MANAGER
-  PROGRAM_OFFICER
-  QA_ADMIN_SUPPORT
+  CONTENT_MANAGER  
+  PROGRAM_OFFICER  
+  QA_ADMIN_SUPPORT      //muadh 
 }
 
 enum ProgramType {
