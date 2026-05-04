@@ -6,6 +6,7 @@ import router from "./routes/index";
 import { errorHandler } from "./middlewares/error.middleware";
 import { AppError } from "./types/error";
 import { requestLogger } from "./middlewares/logger.middleware";
+import seedSuperAdmin from "./seed/seed";
 
 const app = express();
 
@@ -32,8 +33,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // error middleware
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
+app.listen(env.PORT, async () => {
   console.log(`Server running on http://localhost:${env.PORT} in ${env.NODE_ENV} mode`);
+  await seedSuperAdmin();
 });
 
 export default app;
