@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { randomUUID } from "crypto";
 import env from "../config/env";
 import { type Role } from "../generated/prisma/enums";
 
@@ -13,7 +14,7 @@ export const signAccessToken = (payload: JwtPayload): string => {
 };
 
 export const signRefreshToken = (payload: JwtPayload): string => {
-  return jwt.sign(payload, env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+  return jwt.sign(payload, env.JWT_REFRESH_SECRET, { expiresIn: "7d", jwtid: randomUUID() });
 };
 
 export const verifyAccessToken = (token: string): JwtPayload => {
