@@ -43,3 +43,9 @@ export const requireHubScope =
 
     next();
   };
+
+export const requireHubScopeParam = (paramName = "hubId") =>
+  requireHubScope((req) => {
+    const hubId = req.params[paramName];
+    return typeof hubId === "string" ? hubId : undefined;
+  });

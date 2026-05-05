@@ -90,3 +90,16 @@ export const rbacCheck = (req: AuthRequest, res: Response) => {
     },
   });
 };
+
+export const hubScopeCheck = (req: AuthRequest, res: Response) => {
+  return res.status(200).json({
+    status: "success",
+    message: "You are authorized for this hub-scoped route.",
+    data: {
+      userId: req.user?.userId,
+      role: req.user?.role,
+      userHubId: req.user?.hubId,
+      requestedHubId: typeof req.params.hubId === "string" ? req.params.hubId : null,
+    },
+  });
+};
