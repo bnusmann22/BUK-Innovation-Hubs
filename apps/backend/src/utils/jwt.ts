@@ -10,7 +10,8 @@ export interface JwtPayload {
 }
 
 export const signAccessToken = (payload: JwtPayload): string => {
-  return jwt.sign(payload, env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
+  const expiresIn = env.NODE_ENV === "development" ? "30m" : "15m";
+  return jwt.sign(payload, env.JWT_ACCESS_SECRET, { expiresIn });
 };
 
 export const signRefreshToken = (payload: JwtPayload): string => {
