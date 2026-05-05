@@ -91,7 +91,8 @@ model User {
   // Only populated for HUB_MANAGER
   managedHub Hub? @relation("HubManager")
 
-  auditLogs AuditLog[]
+  auditLogs    AuditLog[]
+  authSessions AuthSession[]
 
   @@map("users")
 }
@@ -316,4 +317,22 @@ model AuditLog {
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("audit_logs")
+}
+
+model AuthSession {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("auth_sessions")
 }

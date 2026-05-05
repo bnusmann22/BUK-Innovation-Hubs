@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import env from "../config/env";
+import { type Role } from "../generated/prisma/enums";
 
 export interface JwtPayload {
   userId: string;
-  role: string;
+  role: Role;
   hubId: string | null;
 }
 
