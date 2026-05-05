@@ -1,8 +1,13 @@
 "use client";
 
-import { Calendar, ArrowRight, Search, Filter } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
+import {
+  HeroSection,
+  FeaturedNewsSection,
+  SearchFilterSection,
+  NewsListSection,
+  CTASection,
+} from "@/components/sections/news";
 
 const newsData = [
   {
@@ -96,153 +101,17 @@ export default function NewsPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#1b5e2b]/10 to-[#006b85]/10">
-        <div className="mx-auto max-w-7xl">
-          <h1 className="text-5xl font-bold text-[#172018] mb-4">News & Announcements</h1>
-          <p className="text-xl text-[#61705d] max-w-3xl">
-            Stay updated with the latest news, announcements, opportunities, and success stories from
-            BUK Innovation Hubs. Freshness is mandatory - outdated content kills credibility.
-          </p>
-        </div>
-      </section>
-
-      {/* Featured News */}
-      {featuredNews.length > 0 && (
-        <section className="py-12 px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <h2 className="text-2xl font-bold text-[#172018] mb-8">Featured</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featuredNews.map((news) => (
-                <Link
-                  key={news.id}
-                  href="#"
-                  className="group rounded-lg border-2 border-[#1b5e2b] overflow-hidden hover:shadow-xl transition bg-white flex flex-col"
-                >
-                  <div className="aspect-video bg-gradient-to-br from-[#1b5e2b]/20 to-[#006b85]/20 flex items-center justify-center text-6xl group-hover:scale-105 transition">
-                    {news.image}
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="px-3 py-1 bg-[#1b5e2b] text-white text-xs font-semibold rounded-full">
-                        {news.category}
-                      </span>
-                      <span className="text-xs text-[#5a6b57]">{news.date}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-[#172018] mb-2 group-hover:text-[#1b5e2b] transition line-clamp-2">
-                      {news.title}
-                    </h3>
-                    <p className="text-[#61705d] text-sm flex-1 line-clamp-3 mb-4">
-                      {news.excerpt}
-                    </p>
-                    <span className="inline-flex items-center gap-1 text-[#1b5e2b] font-semibold text-sm">
-                      Read More <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Search and Filter */}
-      <section className="sticky top-20 z-40 bg-white/95 backdrop-blur border-b border-[#dfe6d7] py-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Search Bar */}
-          <div className="mb-6">
-            <div className="relative">
-              <Search className="absolute left-4 top-3 w-5 h-5 text-[#5a6b57]" />
-              <input
-                type="text"
-                placeholder="Search news and announcements..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-lg border border-[#dfe6d7] bg-white focus:outline-none focus:border-[#1b5e2b]"
-              />
-            </div>
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex items-center gap-2 overflow-x-auto">
-            <Filter className="w-5 h-5 text-[#5a6b57] flex-shrink-0" />
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition ${
-                  selectedCategory === cat
-                    ? "bg-[#1b5e2b] text-white"
-                    : "bg-[#f5f7f2] text-[#172018] hover:bg-[#dfe6d7]"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* News List */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl space-y-6">
-          {filteredNews.map((news) => (
-            <Link
-              key={news.id}
-              href="#"
-              className="group rounded-lg border border-[#dfe6d7] p-6 hover:shadow-lg hover:border-[#1b5e2b] transition bg-white flex gap-6"
-            >
-              <div className="text-5xl flex-shrink-0">{news.image}</div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-3 py-1 bg-[#1b5e2b]/10 text-[#1b5e2b] text-xs font-semibold rounded-full">
-                    {news.category}
-                  </span>
-                  <span className="text-xs text-[#5a6b57] flex-shrink-0">
-                    <Calendar className="w-3 h-3 inline mr-1" />
-                    {news.date}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-bold text-[#172018] mb-2 group-hover:text-[#1b5e2b] transition line-clamp-2">
-                  {news.title}
-                </h3>
-
-                <p className="text-[#61705d] text-sm line-clamp-2 mb-3">{news.excerpt}</p>
-
-                <span className="inline-flex items-center gap-1 text-[#1b5e2b] font-semibold text-sm group-hover:gap-2 transition">
-                  Read Full Story <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-          ))}
-
-          {filteredNews.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-lg text-[#61705d]">No news found matching your search.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Newsletter Signup CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="mx-auto max-w-3xl rounded-lg border-2 border-[#1b5e2b] p-8 text-center">
-          <h2 className="text-3xl font-bold text-[#172018] mb-4">
-            Never Miss an Update
-          </h2>
-          <p className="text-lg text-[#61705d] mb-6">
-            Subscribe to our newsletter to receive announcements, opportunities, and success stories directly in your inbox.
-          </p>
-          <Link
-            href="/newsletter"
-            className="inline-block bg-[#1b5e2b] text-white px-6 py-3 rounded-md font-bold hover:bg-[#154a22] transition"
-          >
-            Subscribe to Newsletter
-          </Link>
-        </div>
-      </section>
+      <HeroSection />
+      {featuredNews.length > 0 && <FeaturedNewsSection featuredNews={featuredNews} />}
+      <SearchFilterSection
+        selectedCategory={selectedCategory}
+        categories={categories}
+        searchQuery={searchQuery}
+        onCategoryChange={setSelectedCategory}
+        onSearchChange={setSearchQuery}
+      />
+      <NewsListSection news={filteredNews} />
+      <CTASection />
     </div>
   );
 }
