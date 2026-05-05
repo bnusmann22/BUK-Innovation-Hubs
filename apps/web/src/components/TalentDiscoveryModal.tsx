@@ -62,7 +62,7 @@ export default function TalentDiscoveryModal() {
         {step === "call" && (
           <div className="w-full max-w-5xl overflow-hidden rounded-lg border border-white/20 bg-white shadow-2xl">
             <div className="grid min-h-[min(760px,calc(100dvh-3rem))] grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
-              <div className="flex flex-col justify-center bg-gradient-to-br from-[#1b5e2b] to-[#006b85] px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-12 lg:py-10">
+              <div className="flex flex-col justify-center bg-gradient-to-br from-[#009fc3] to-[#006b85] px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-12 lg:py-10">
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 sm:h-14 sm:w-14">
                   <UserSearch className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
@@ -85,7 +85,7 @@ export default function TalentDiscoveryModal() {
                     "Join partner-backed projects and innovation activities.",
                   ].map((item) => (
                     <div key={item} className="flex gap-3">
-                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#1b5e2b]" />
+                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#009fc3]" />
                       <p className="text-sm text-[#61705d] sm:text-base">{item}</p>
                     </div>
                   ))}
@@ -93,14 +93,14 @@ export default function TalentDiscoveryModal() {
                 <button
                   type="button"
                   onClick={() => setStep("form")}
-                  className="inline-flex w-full items-center justify-center rounded-md bg-[#1b5e2b] px-6 py-4 text-base font-bold text-white transition hover:bg-[#154a22] sm:py-4"
+                  className="inline-flex w-full items-center justify-center rounded-md bg-[#009fc3] px-6 py-4 text-base font-bold text-white transition hover:bg-[#0088a6] sm:py-4"
                 >
                   Submit Talent Profile
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-md border border-[#dfe6d7] px-6 py-3 text-sm font-bold text-[#61705d] transition hover:border-[#1b5e2b] hover:text-[#1b5e2b] sm:mt-4 sm:py-3"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-md border border-[#dfe6d7] px-6 py-3 text-sm font-bold text-[#61705d] transition hover:border-[#009fc3] hover:text-[#009fc3] sm:mt-4 sm:py-3"
                 >
                   Maybe Later
                 </button>
@@ -112,7 +112,7 @@ export default function TalentDiscoveryModal() {
         {step === "form" && (
           <div className="w-full max-w-2xl rounded-lg border border-[#dfe6d7] bg-white p-6 shadow-2xl sm:p-8">
             <div className="mb-6">
-              <p className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-[#1b5e2b]">
+              <p className="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-[#009fc3]">
                 Talent profile
               </p>
               <h2 className="text-2xl font-black text-[#172018] sm:text-3xl">Tell us what you can build</h2>
@@ -157,7 +157,7 @@ export default function TalentDiscoveryModal() {
 
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center rounded-md bg-[#1b5e2b] px-6 py-4 text-base font-bold text-white transition hover:bg-[#154a22] sm:py-4"
+                className="inline-flex w-full items-center justify-center rounded-md bg-[#009fc3] px-6 py-4 text-base font-bold text-white transition hover:bg-[#0088a6] sm:py-4"
               >
                 Submit Profile
               </button>
@@ -167,7 +167,7 @@ export default function TalentDiscoveryModal() {
 
         {step === "success" && (
           <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-2xl sm:p-8">
-            <CheckCircle className="mx-auto mb-4 h-12 w-12 text-[#1b5e2b] sm:h-14 sm:w-14" />
+            <CheckCircle className="mx-auto mb-4 h-12 w-12 text-[#009fc3] sm:h-14 sm:w-14" />
             <h2 className="mb-2 text-xl font-black text-[#172018] sm:text-2xl">Profile submitted</h2>
             <p className="text-sm text-[#61705d] sm:text-base">
               Thank you. The Innovation Hub team has received your talent profile.
@@ -203,7 +203,7 @@ function FormField({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         required
-        className="w-full rounded-lg border border-[#dfe6d7] bg-white px-4 py-3 text-[#172018] outline-none transition placeholder:text-[#8b9a86] focus:border-[#1b5e2b] focus:ring-2 focus:ring-[#1b5e2b]/10"
+        className="w-full rounded-lg border border-[#dfe6d7] bg-white px-4 py-3 text-[#172018] outline-none transition placeholder:text-[#8b9a86] focus:border-[#009fc3] focus:ring-2 focus:ring-[#009fc3]/10"
       />
     </label>
   );

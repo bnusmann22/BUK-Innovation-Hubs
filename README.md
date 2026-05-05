@@ -33,5 +33,5 @@ This project was built by SIWES students at Bayero University Kano:
 
 - **Abdullahi Jamil Muhammad** - [GitHub](https://github.com/bnusmann22) | [LinkedIn](https://www.linkedin.com/in/abdullahi-jamil-26b940275/)
 - **Ahmad Ibrahim** - [GitHub](https://github.com/Searcher06) | [LinkedIn](https://www.linkedin.com/in/ahmad-ibrahim-242aa1335/)
-- **Student 3** - [GitHub](https://github.com/student3) | [LinkedIn](https://linkedin.com/in/student3)
+- **Adeleke Muadh Ibrahim** - [GitHub](https://github.com/muadhbus) | [LinkedIn](https://linkedin.com/in/student3)
 - **Student 4** - [GitHub](https://github.com/student4) | [LinkedIn](https://linkedin.com/in/student4)
