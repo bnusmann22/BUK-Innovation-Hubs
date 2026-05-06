@@ -66,6 +66,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   // relations
+  hubId      String?
+  hub        Hub?  @relation("HubStaff", fields: [hubId], references: [id])
   managedHub Hub? @relation("HubManager")
 
   @@map("users")
@@ -89,6 +91,7 @@ model Hub {
   // relations
   managerId String?  @unique
   manager   User?    @relation("HubManager", fields: [managerId], references: [id])
+  staff     User[]   @relation("HubStaff")
   programs  Program[]
   events    Event[]
 
