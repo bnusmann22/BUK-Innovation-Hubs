@@ -22,21 +22,24 @@ export default function Header() {
 
   return (
     <motion.header 
-      className="sticky top-0 z-50 border-b border-[#dfe6d7] bg-white/95 backdrop-blur"
+      className="sticky top-0 z-50 border-b border-white/40 bg-white/62 backdrop-blur-2xl"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between py-4">
+      <div className="site-shell">
+        <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Link href="/" className="flex items-center gap-2">
-              <Logo size="md" showText textColor="dark" />
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 [&_h1]:text-[11px] [&_p]:text-[9px]"
+            >
+              <Logo size="sm" showText textColor="dark" />
             </Link>
           </motion.div>
 
@@ -56,7 +59,7 @@ export default function Header() {
               >
                 <Link
                   href={link.href}
-                  className="px-3 py-2 text-sm font-medium text-[#172018] hover:text-[#1b5e2b] transition"
+                  className="rounded-md px-2 py-1.5 text-[10px] font-medium text-[#172018] transition hover:bg-white/50 hover:text-[#1b5e2b]"
                 >
                   {link.label}
                 </Link>
@@ -66,20 +69,20 @@ export default function Header() {
 
           {/* Desktop CTA Buttons */}
           <motion.div 
-            className="hidden md:flex items-center gap-3"
+            className="hidden md:flex items-center gap-2"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             <Link
               href="/newsletter"
-              className="rounded-md border border-[#c9d5c3] px-4 py-2 text-sm font-bold text-[#172018] hover:border-[#809176] transition"
+              className="glass-button-secondary px-2.5 py-1.5 text-[10px]"
             >
               Newsletter
             </Link>
             <Link
               href="/programs"
-              className="rounded-md bg-[#1b5e2b] px-4 py-2 text-sm font-bold text-white hover:bg-[#154a22] transition"
+              className="glass-button px-2.5 py-1.5 text-[10px]"
             >
               Join Now
             </Link>
@@ -87,9 +90,10 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="md:hidden p-2 text-[#172018]"
+            className="rounded-md p-1.5 text-[#172018] transition hover:bg-white/50 md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             whileTap={{ scale: 0.95 }}
+            aria-label="Toggle navigation"
           >
             <AnimatePresence mode="wait">
               {mobileMenuOpen ? (
@@ -100,7 +104,7 @@ export default function Header() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -110,7 +114,7 @@ export default function Header() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu className="w-6 h-6" />
+                  <Menu className="w-5 h-5" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -121,7 +125,7 @@ export default function Header() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.nav 
-              className="md:hidden pb-4 space-y-2"
+              className="glass-panel-soft mb-3 space-y-1 rounded-lg p-2.5 md:hidden"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -136,7 +140,7 @@ export default function Header() {
                 >
                   <Link
                     href={link.href}
-                    className="block px-3 py-2 text-sm font-medium text-[#172018] hover:text-[#1b5e2b] hover:bg-white/50 rounded transition"
+                    className="block rounded-md px-2.5 py-1.5 text-[11px] font-medium text-[#172018] transition hover:bg-white/58 hover:text-[#1b5e2b]"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -144,21 +148,21 @@ export default function Header() {
                 </motion.div>
               ))}
               <motion.div 
-                className="flex flex-col gap-2 pt-4 border-t border-[#dfe6d7]"
+                className="mt-2.5 flex flex-col gap-1.5 border-t border-[#dfe6d7]/70 pt-2.5"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.8 }}
               >
                 <Link
                   href="/newsletter"
-                  className="block rounded-md border border-[#c9d5c3] px-4 py-2 text-sm font-bold text-[#172018] hover:border-[#809176] transition text-center"
+                  className="glass-button-secondary w-full text-center text-[10px]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Newsletter
                 </Link>
                 <Link
                   href="/programs"
-                  className="block rounded-md bg-[#1b5e2b] px-4 py-2 text-sm font-bold text-white hover:bg-[#154a22] transition text-center"
+                  className="glass-button w-full text-center text-[10px]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Join Now

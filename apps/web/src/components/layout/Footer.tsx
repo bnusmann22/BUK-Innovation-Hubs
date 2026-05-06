@@ -14,12 +14,12 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 },
+    transition: { staggerChildren: 0.12 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 18 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -48,36 +48,34 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[#dfe6d7] bg-white/80 text-[#172018]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-
-        {/* Main Content */}
+    <footer className="border-t border-white/50 bg-white/42 text-[#172018] backdrop-blur-2xl">
+      <div className="site-shell py-7">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8"
+          className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-4"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-
-          {/* About */}
           <motion.div variants={itemVariants}>
-            <h3 className="font-bold text-lg mb-4">
+            <h3 className="mb-2 text-sm font-semibold">
               BUK Innovation Hubs
             </h3>
-            <p className="text-sm text-[#61705d] leading-relaxed">
+            <p className="text-xs leading-5 text-[#61705d]">
               Empowering students, researchers, and entrepreneurs through
-              world-class innovation spaces at Bayero University Kano.
+              focused innovation spaces at Bayero University Kano.
             </p>
           </motion.div>
 
-          {/* Quick Links */}
           <motion.nav variants={itemVariants}>
-            <h4 className="font-bold text-sm mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm text-[#61705d]">
+            <h4 className="mb-2 text-[11px] font-semibold">Quick Links</h4>
+            <ul className="space-y-1.5 text-xs text-[#61705d]">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="hover:text-[#1b5e2b] transition">
+                  <Link
+                    href={link.href}
+                    className="transition hover:text-[#1b5e2b]"
+                  >
                     {link.name}
                   </Link>
                 </li>
@@ -85,13 +83,15 @@ export default function Footer() {
             </ul>
           </motion.nav>
 
-          {/* Explore */}
           <motion.nav variants={itemVariants}>
-            <h4 className="font-bold text-sm mb-4">Explore</h4>
-            <ul className="space-y-2 text-sm text-[#61705d]">
+            <h4 className="mb-2 text-[11px] font-semibold">Explore</h4>
+            <ul className="space-y-1.5 text-xs text-[#61705d]">
               {exploreLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="hover:text-[#1b5e2b] transition">
+                  <Link
+                    href={link.href}
+                    className="transition hover:text-[#1b5e2b]"
+                  >
                     {link.name}
                   </Link>
                 </li>
@@ -99,29 +99,27 @@ export default function Footer() {
             </ul>
           </motion.nav>
 
-          {/* Contact */}
           <motion.div variants={itemVariants}>
-            <h4 className="font-bold text-sm mb-4">Contact</h4>
-            <div className="space-y-3 text-sm text-[#61705d]">
-              <div className="flex items-start gap-2">
-                <Mail className="w-4 h-4 mt-0.5" />
+            <h4 className="mb-2 text-[11px] font-semibold">Contact</h4>
+            <div className="space-y-2 text-xs text-[#61705d]">
+              <div className="flex items-start gap-1.5">
+                <Mail className="mt-0.5 h-3.5 w-3.5" />
                 <a href="mailto:innovation@buk.edu.ng">innovation@buk.edu.ng</a>
               </div>
-              <div className="flex items-start gap-2">
-                <Phone className="w-4 h-4 mt-0.5" />
+              <div className="flex items-start gap-1.5">
+                <Phone className="mt-0.5 h-3.5 w-3.5" />
                 <a href="tel:+2348000000000">+234 800 000 0000</a>
               </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 mt-0.5" />
+              <div className="flex items-start gap-1.5">
+                <MapPin className="mt-0.5 h-3.5 w-3.5" />
                 <span>Bayero University Kano, Nigeria</span>
               </div>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Social */}
-        <div className="border-t border-[#dfe6d7] py-6">
-          <div className="flex justify-center gap-6">
+        <div className="border-t border-[#dfe6d7]/70 py-3.5">
+          <div className="flex justify-center gap-5">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
@@ -129,19 +127,18 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-[#61705d] hover:text-[#1b5e2b] transition"
+                className="text-[#61705d] transition hover:text-[#1b5e2b]"
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="h-3.5 w-3.5" />
               </a>
             ))}
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="border-t border-[#dfe6d7] pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#61705d]">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-[#dfe6d7]/70 pt-3.5 text-[10px] text-[#61705d] md:flex-row">
           <p>© {currentYear} BUK Innovation Hubs. All rights reserved.</p>
 
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5">
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>
             <Link href="/accessibility">Accessibility</Link>

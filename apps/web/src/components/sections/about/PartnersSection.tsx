@@ -11,17 +11,17 @@ export default function PartnersSection() {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-4xl font-bold text-[#172018] mb-12 text-center">Institutional Partners</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+        <h2 className="text-sm font-bold text-[#172018] mb-6 text-center">Institutional Partners</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
           {partners.map((partner, idx) => (
             <div
               key={idx}
-              className="rounded-lg border border-[#dfe6d7] p-6 text-center hover:shadow-lg transition"
+              className="rounded-lg border border-[#dfe6d7] p-3 text-center hover:shadow-lg transition"
             >
-              <div className="text-5xl mb-3">{partner.logo}</div>
-              <p className="font-semibold text-[#172018] text-sm">{partner.name}</p>
+              <div className="text-2xl mb-1.5">{partner.logo}</div>
+              <p className="font-semibold text-[#172018] text-[10px]">{partner.name}</p>
             </div>
           ))}
         </div>

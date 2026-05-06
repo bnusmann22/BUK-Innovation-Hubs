@@ -35,15 +35,15 @@ export default function StrategicGoalsSection() {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-4xl font-bold text-[#172018] mb-12 text-center">Strategic Goals</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <h2 className="text-sm font-bold text-[#172018] mb-6 text-center">Strategic Goals</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {goals.map((goal, idx) => (
-            <div key={idx} className="rounded-lg border border-[#dfe6d7] p-6 hover:shadow-lg transition">
-              <goal.icon className="w-10 h-10 text-[#1b5e2b] mb-3" />
-              <h3 className="text-lg font-bold text-[#172018] mb-2">{goal.goal}</h3>
-              <p className="text-[#61705d]">{goal.description}</p>
+            <div key={idx} className="rounded-lg border border-[#dfe6d7] p-4 hover:shadow-lg transition">
+              <goal.icon className="w-6 h-6 text-[#1b5e2b] mb-2" />
+              <h3 className="text-xs font-bold text-[#172018] mb-1">{goal.goal}</h3>
+              <p className="text-[10px] text-[#61705d]">{goal.description}</p>
             </div>
           ))}
         </div>

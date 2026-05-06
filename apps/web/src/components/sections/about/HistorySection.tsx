@@ -39,24 +39,24 @@ export default function HistorySection() {
   ];
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8">
+    <section className="py-10 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-4xl font-bold text-[#172018] mb-12 text-center">Our History</h2>
-        <div className="space-y-12">
+        <h2 className="text-xl font-bold text-[#172018] mb-8 text-center">Our History</h2>
+        <div className="space-y-8">
           {milestones.map((milestone, idx) => (
-            <div key={idx} className="flex gap-8 items-start">
+            <div key={idx} className="flex gap-4 items-start">
               <div className="flex flex-col items-center flex-shrink-0">
-                <div className="w-12 h-12 rounded-full bg-[#1b5e2b] text-white flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-full bg-[#1b5e2b] text-white flex items-center justify-center font-bold text-xs">
                   {idx + 1}
                 </div>
                 {idx < milestones.length - 1 && (
-                  <div className="w-1 h-16 bg-gradient-to-b from-[#1b5e2b] to-transparent mt-2" />
+                  <div className="w-1 h-12 bg-gradient-to-b from-[#1b5e2b] to-transparent mt-1.5" />
                 )}
               </div>
-              <div className="pb-12">
-                <p className="text-sm font-bold text-[#1b5e2b] mb-1">{milestone.year}</p>
-                <h3 className="text-2xl font-bold text-[#172018] mb-2">{milestone.title}</h3>
-                <p className="text-[#61705d] max-w-2xl">{milestone.description}</p>
+              <div className="pb-8">
+                <p className="text-[10px] font-bold text-[#1b5e2b] mb-0.5">{milestone.year}</p>
+                <h3 className="text-sm font-bold text-[#172018] mb-1">{milestone.title}</h3>
+                <p className="text-xs text-[#61705d] max-w-2xl">{milestone.description}</p>
               </div>
             </div>
           ))}
