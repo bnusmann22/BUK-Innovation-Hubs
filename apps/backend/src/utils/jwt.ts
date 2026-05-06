@@ -1,0 +1,27 @@
+import jwt from "jsonwebtoken";
+import { randomUUID } from "crypto";
+import env from "../config/env";
+import { type Role } from "../generated/prisma/enums";
+
+export interface JwtPayload {
+  userId: string;
+  role: Role;
+  hubId: string | null;
+}
+
+export const signAccessToken = (payload: JwtPayload): string => {
+  const expiresIn = env.NODE_ENV === "development" ? "30m" : "15m";
+  return jwt.sign(payload, env.JWT_ACCESS_SECRET, { expiresIn });
+};
+
+export const signRefreshToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, env.JWT_REFRESH_SECRET, { expiresIn: "7d", jwtid: randomUUID() });
+};
+
+export const verifyAccessToken = (token: string): JwtPayload => {
+  return jwt.verify(token, env.JWT_ACCESS_SECRET) as JwtPayload;
+};
+
+export const verifyRefreshToken = (token: string): JwtPayload => {
+  return jwt.verify(token, env.JWT_REFRESH_SECRET) as JwtPayload;
+};
