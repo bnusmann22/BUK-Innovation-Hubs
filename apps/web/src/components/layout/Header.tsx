@@ -27,7 +27,7 @@ export default function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-[5%]">
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <motion.div

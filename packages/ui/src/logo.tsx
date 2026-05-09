@@ -10,20 +10,20 @@ interface LogoProps {
 
 const sizeMap = {
   sm: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
   },
   md: {
-    width: 56,
-    height: 56,
+    width: 50,
+    height: 50,
   },
   lg: {
-    width: 72,
-    height: 72,
+    width: 65,
+    height: 65,
   },
   xl: {
-    width: 96,
-    height: 96,
+    width: 86,
+    height: 86,
   },
 };
 
@@ -56,7 +56,7 @@ export default function Logo({
       {showText && (
         <div>
           <h1
-            className={`text-2xl uppercase tracking-widest font-semibold ${
+            className={`text-xl uppercase tracking-widest font-semibold ${
               textColor === "light" ? "text-[#a8d8e6]" : textColorClass
             }`}
           >

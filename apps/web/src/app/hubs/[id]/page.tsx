@@ -411,9 +411,9 @@ export default function HubProfilePage() {
                 <Image
                   src={image}
                   alt={`${hub.name} image ${idx + 1}`}
-                  width={480}
-                  height={320}
-                  className="h-72 w-full object-cover transition duration-300 hover:scale-105"
+                  width={432}
+                  height={288}
+                  className="h-65 w-full object-cover transition duration-300 hover:scale-105"
                 />
               </div>
             ))}
