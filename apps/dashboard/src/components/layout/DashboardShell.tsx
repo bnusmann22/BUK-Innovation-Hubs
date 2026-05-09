@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Footer } from "./Footer";
 import { Sidebar } from "./Sidebar";
 
@@ -35,12 +36,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
                 >
                   Export report
                 </button>
-                <button
+                <Link
+                  href="/dashboard/add-hub"
                   className="rounded-md bg-[#1b5e2b] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#154a22]"
-                  type="button"
                 >
                   Add new hub
-                </button>
+                </Link>
               </div>
             </div>
           </header>

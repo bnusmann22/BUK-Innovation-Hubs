@@ -81,6 +81,7 @@ model User {
   password  String
   role      Role     @default(CONTENT_MANAGER)
   isActive  Boolean  @default(true)
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -108,9 +109,13 @@ model Hub {
   description  String
   focusArea    String
   location     String?
+  logo         String?
   contactEmail String?
+  contactPhone String?
+  socialLinks  Json?
   facilities   String[]
   gallery      String[]
+  pricing      Json?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

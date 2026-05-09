@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
 import env from "./config/env";
 import router from "./routes/index";
@@ -10,10 +10,16 @@ import seedSuperAdmin from "./seed/seed";
 
 const app = express();
 
+// CORS configuration
+const corsOptions: CorsOptions = {
+  origin: env.ALLOWED_ORIGINS,
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 // middleware
 app.use(requestLogger);
 app.use(helmet());
-app.use(cors({ origin: env.CLIENT_URL }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
