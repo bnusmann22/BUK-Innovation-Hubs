@@ -403,7 +403,130 @@ function SkillPicker({
   );
 }
 
-// ── FormField ─────────────────────────────────────────────────────────────────
+// ── RegNumberInput ─────────────────────────────────────────────────────────────
+// Format: CST/23/SWE/00989 → 3 chars / 2 digits / 3 chars / 5 digits
+
+function RegNumberInput({
+  value,
+  onChange,
+  error,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+}) {
+  const formatValue = (input: string): string => {
+    // Remove all non-alphanumeric characters
+    const cleaned = input.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+    // Build formatted string with slashes at correct positions
+    let formatted = "";
+    let pos = 0;
+
+    // First 3 characters
+    if (pos < cleaned.length) {
+      formatted += cleaned.slice(pos, pos + 3);
+      pos += 3;
+    }
+    if (pos < cleaned.length) {
+      formatted += "/";
+      formatted += cleaned.slice(pos, pos + 2);
+      pos += 2;
+    }
+    if (pos < cleaned.length) {
+      formatted += "/";
+      formatted += cleaned.slice(pos, pos + 3);
+      pos += 3;
+    }
+    if (pos < cleaned.length) {
+      formatted += "/";
+      formatted += cleaned.slice(pos, pos + 5);
+    }
+
+    return formatted;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatValue(e.target.value);
+    onChange(formatted);
+  };
+
+  // Validate format: 3 letters / 2 digits / 3 letters / 5 digits
+  const isValid = (val: string): boolean => {
+    const pattern = /^[A-Z]{3}\/\d{2}\/[A-Z]{3}\/\d{5}$/;
+    return pattern.test(val);
+  };
+
+  // Only show validation error after field is complete OR after form submission (error prop)
+  const isComplete = value.length === 16;
+  const showError = error || (isComplete && !isValid(value));
+  const errorMsg = showError
+    ? "Format: 3 letters / 2 digits / 3 letters / 5 digits (e.g., CST/23/SWE/00989)"
+    : "";
+
+  return (
+    <FormField
+      label="Registration Number"
+      value={value}
+      onChange={onChange}
+      placeholder="CST/23/SWE/00989"
+      type="text"
+      error={showError}
+      errorMessage={errorMsg}
+    />
+  );
+}
+
+// ── PhoneInput ─────────────────────────────────────────────────────────────────
+// Format: 11 digits, starting with 080, 081, 070, 071, 090, 091
+
+function PhoneInput({
+  value,
+  onChange,
+  error,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  error?: boolean;
+}) {
+  const formatValue = (input: string): string => {
+    // Remove all non-digit characters
+    const cleaned = input.replace(/\D/g, "");
+    // Limit to 11 digits
+    return cleaned.slice(0, 11);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatValue(e.target.value);
+    onChange(formatted);
+  };
+
+  // Validate: exactly 11 digits, starts with allowed prefixes
+  const isValid = (val: string): boolean => {
+    if (val.length !== 11) return false;
+    const allowedPrefixes = ["080", "081", "070", "071", "090", "091"];
+    return allowedPrefixes.some((prefix) => val.startsWith(prefix));
+  };
+
+  // Only show validation error after field is complete OR after form submission (error prop)
+  const isComplete = value.length === 11;
+  const showError = error || (isComplete && !isValid(value));
+  const errorMsg = showError
+    ? "Phone must be 11 digits starting with 080, 081, 070, 071, 090, or 091"
+    : "";
+
+  return (
+    <FormField
+      label="WhatsApp Number"
+      value={value}
+      onChange={onChange}
+      placeholder="08012345678"
+      type="tel"
+      error={showError}
+      errorMessage={errorMsg}
+    />
+  );
+}
 
 function FormField({
   label,
@@ -411,12 +534,16 @@ function FormField({
   onChange,
   placeholder,
   type = "text",
+  error,
+  errorMessage,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   type?: "email" | "tel" | "text";
+  error?: boolean;
+  errorMessage?: string;
 }) {
   return (
     <label className="block">
@@ -427,8 +554,15 @@ function FormField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required
-        className="w-full rounded-lg border border-[#dfe6d7] bg-white px-4 py-3 text-sm text-[#172018] outline-none transition placeholder:text-[#8b9a86] focus:border-[#009fc3] focus:ring-2 focus:ring-[#009fc3]/10"
+        className={`w-full rounded-lg border px-4 py-3 text-sm text-[#172018] outline-none transition placeholder:text-[#8b9a86] focus:ring-2 focus:ring-[#009fc3]/10 ${
+          error
+            ? "border-red-400 bg-red-50 focus:border-red-400 focus:ring-red-100"
+            : "border-[#dfe6d7] bg-white focus:border-[#009fc3]"
+        }`}
       />
+      {error && errorMessage && (
+        <p className="mt-1 text-xs text-red-500">{errorMessage}</p>
+      )}
     </label>
   );
 }
@@ -443,7 +577,12 @@ export default function TalentDiscoveryModal() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
-  const [fieldErrors, setFieldErrors] = useState({ department: false, skills: false });
+   const [fieldErrors, setFieldErrors] = useState({ 
+    department: false, 
+    skills: false,
+    regNumber: false,
+    whatsappNumber: false
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -474,11 +613,25 @@ export default function TalentDiscoveryModal() {
 
     const deptErr = !formData.department;
     const skillsErr = skills.length === 0;
-    if (deptErr || skillsErr) {
-      setFieldErrors({ department: deptErr, skills: skillsErr });
+
+    // Validate Registration Number
+    const regNumberPattern = /^[A-Z]{3}\/\d{2}\/[A-Z]{3}\/\d{5}$/;
+    const regErr = !regNumberPattern.test(formData.regNumber);
+
+    // Validate WhatsApp Number
+    const phonePattern = /^(080|081|070|071|090|091)\d{8}$/;
+    const phoneErr = !phonePattern.test(formData.whatsappNumber);
+
+    if (deptErr || skillsErr || regErr || phoneErr) {
+      setFieldErrors({
+        department: deptErr,
+        skills: skillsErr,
+        regNumber: regErr,
+        whatsappNumber: phoneErr,
+      });
       return;
     }
-    setFieldErrors({ department: false, skills: false });
+    setFieldErrors({ department: false, skills: false, regNumber: false, whatsappNumber: false });
 
     setSubmitting(true);
     setSubmitError("");
@@ -585,35 +738,40 @@ export default function TalentDiscoveryModal() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Row 1 */}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <FormField
-                  label="Full Name"
-                  value={formData.name}
-                  onChange={set("name")}
-                />
-                <FormField
-                  label="Registration Number"
-                  value={formData.regNumber}
-                  onChange={set("regNumber")}
-                />
-              </div>
+               {/* Row 1 */}
+               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                 <FormField
+                   label="Full Name"
+                   value={formData.name}
+                   onChange={set("name")}
+                 />
+                 <RegNumberInput
+                   value={formData.regNumber}
+                   onChange={(v) => {
+                     set("regNumber")(v);
+                     setFieldErrors((fe) => ({ ...fe, regNumber: false }));
+                   }}
+                   error={fieldErrors.regNumber}
+                 />
+               </div>
 
-              {/* Row 2 */}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <FormField
-                  label="WhatsApp Number"
-                  type="tel"
-                  value={formData.whatsappNumber}
-                  onChange={set("whatsappNumber")}
-                />
-                <FormField
-                  label="Email Address"
-                  type="email"
-                  value={formData.email}
-                  onChange={set("email")}
-                />
-              </div>
+               {/* Row 2 */}
+               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                 <PhoneInput
+                   value={formData.whatsappNumber}
+                   onChange={(v) => {
+                     set("whatsappNumber")(v);
+                     setFieldErrors((fe) => ({ ...fe, whatsappNumber: false }));
+                   }}
+                   error={fieldErrors.whatsappNumber}
+                 />
+                 <FormField
+                   label="Email Address"
+                   type="email"
+                   value={formData.email}
+                   onChange={set("email")}
+                 />
+               </div>
 
               {/* Department */}
               <div>
