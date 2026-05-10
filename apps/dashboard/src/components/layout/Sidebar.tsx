@@ -16,12 +16,14 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
+  Users,
 } from "lucide-react";
 
 const sidebarActions = [
   { label: "Overview", icon: LayoutDashboard, href: "/dashboard" },
   { label: "Add Hub", icon: PlusSquare, href: "/dashboard/add-hub" },
   { label: "Manage Hubs", icon: Settings, href: "/dashboard/manage-hubs" },
+  { label: "Talents", icon: Users, href: "/dashboard/talents" },
   { label: "Newsletter", icon: Mail, href: "/dashboard/newsletter" },
   { label: "Events", icon: Calendar, href: "/dashboard/events" },
   { label: "Reports", icon: BarChart3, href: "/dashboard/reports" },

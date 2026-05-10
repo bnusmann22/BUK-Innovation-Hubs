@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\" -Force)",
-      "Bash(Select-Object -Property Name, PSIsContainer)"
+      "Bash(Select-Object -Property Name, PSIsContainer)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\apps\\\\dashboard\\\\src\\\\middleware.ts\")",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\apps\\\\web\\\\src\" -Recurse -File | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\\", \"\"\\) })",
+      "Bash(dir \"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\apps\\\\backend\\\\src\\\\generated\\\\prisma\")",
+      "Bash(Select-String -Path \"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\apps\\\\backend\\\\src\\\\generated\\\\prisma\\\\client.ts\" -Pattern \"talentProfile|TalentProfile\")",
+      "Bash(Select-Object -First 5)",
+      "Bash(dir \"c:\\\\Users\\\\admin\\\\Desktop\\\\BUK_Innovation_Hubs\\\\apps\\\\backend\\\\prisma\\\\migrations\")",
+      "WebFetch(domain:www.buk.edu.ng)"
     ]
   }
 }

@@ -324,6 +324,26 @@ model AuditLog {
   @@map("audit_logs")
 }
 
+// ============================================================
+// TALENT PROFILE
+// Submitted publicly via the website talent discovery modal.
+// email is unique to prevent duplicate submissions.
+// ============================================================
+
+model TalentProfile {
+  id             String   @id @default(uuid())
+  name           String
+  department     String
+  regNumber      String
+  whatsappNumber String
+  email          String   @unique
+  skillset       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("talent_profiles")
+}
+
 model AuthSession {
   id        String   @id @default(uuid())
   tokenHash String   @unique
