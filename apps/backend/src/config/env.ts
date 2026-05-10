@@ -17,6 +17,7 @@ const env = {
   SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
   SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
+  RESEND_FROM_ADDRESS: process.env.RESEND_FROM_ADDRESS,
   WHATSAPP_GROUP_URL: process.env.WHATSAPP_GROUP_URL,
 };
 

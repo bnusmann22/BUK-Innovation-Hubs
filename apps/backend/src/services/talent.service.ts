@@ -6,8 +6,15 @@ import type { SubmitTalentInput } from "../validators/talent.validator";
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
+if (resend) {
+  console.log("[Resend] Email service ready ✓");
+} else {
+  console.warn("[Resend] RESEND_API_KEY not set — emails will be logged to console only");
+}
+
 async function sendConfirmationEmail(to: string, name: string) {
   const groupUrl = env.WHATSAPP_GROUP_URL ?? "";
+  const fromAddress = env.RESEND_FROM_ADDRESS || "onboarding@resend.dev";
   const subject = "BUK Innovation Hub — Talent Discovery Confirmation";
 
   const html = `
@@ -41,18 +48,27 @@ async function sendConfirmationEmail(to: string, name: string) {
     ? `Hi ${name}, your BUK talent profile has been received. Join our WhatsApp group: ${groupUrl}`
     : `Hi ${name}, your BUK talent profile has been received. We will be in touch soon.`;
 
-  if (resend) {
-    await resend.emails.send({
-      from: "BUK Innovation Hubs <onboarding@resend.dev>",
-      to,
-      subject,
-      html,
-      text,
-    });
-  } else {
-    console.log("[Talent email — no RESEND_API_KEY, logging instead]");
+  if (!resend) {
+    console.warn("[Resend] RESEND_API_KEY not set — logging email to console");
     console.log(`To: ${to}\nSubject: ${subject}\n${text}`);
+    return;
   }
+
+  const { data, error } = await resend.emails.send({
+    from: `BUK Innovation Hubs <${fromAddress}>`,
+    to,
+    subject,
+    html,
+    text,
+    tags: [{ name: "category", value: "talent-discovery" }],
+  });
+
+  if (error) {
+    console.error("[Resend] Email send failed:", error.name, "-", error.message);
+    return;
+  }
+
+  console.log("[Resend] Confirmation email sent — id:", data?.id);
 }
 
 export async function submitTalent(input: SubmitTalentInput) {
@@ -69,9 +85,7 @@ export async function submitTalent(input: SubmitTalentInput) {
 
   const talent = await prisma.talentProfile.create({ data: input });
 
-  await sendConfirmationEmail(input.email, input.name).catch((err) => {
-    console.error("[Talent email send failed]", err);
-  });
+  await sendConfirmationEmail(input.email, input.name);
 
   return talent;
 }
@@ -80,4 +94,10 @@ export async function listTalents() {
   return prisma.talentProfile.findMany({
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function deleteTalent(id: string) {
+  const existing = await prisma.talentProfile.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Talent profile not found", 404);
+  return prisma.talentProfile.delete({ where: { id } });
 }

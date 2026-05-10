@@ -7,9 +7,10 @@ import {
   Search,
   Loader2,
   Download,
+  Trash2,
 } from "lucide-react";
 import * as XLSX from "xlsx";
-import { getTalents, type TalentProfile } from "@/lib/talents";
+import { getTalents, deleteTalent, type TalentProfile } from "@/lib/talents";
 
 function exportTalentsToXlsx(talents: TalentProfile[]) {
   const rows = talents.map((t) => ({
@@ -48,6 +49,8 @@ export default function TalentsPage() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchTalents = async () => {
     setLoading(true);
@@ -73,6 +76,19 @@ export default function TalentsPage() {
       t.email.toLowerCase().includes(query.toLowerCase()) ||
       t.skillset.toLowerCase().includes(query.toLowerCase()),
   );
+
+  const handleDelete = async (id: string) => {
+    setDeleting(true);
+    try {
+      await deleteTalent(id);
+      setTalents((prev) => prev.filter((t) => t.id !== id));
+      setConfirmDeleteId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete talent");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const handleExport = () => {
     setExporting(true);
@@ -190,6 +206,7 @@ export default function TalentsPage() {
                   "Email",
                   "Skillset",
                   "Submitted",
+                  "",
                 ].map((h) => (
                   <th
                     key={h}
@@ -223,6 +240,37 @@ export default function TalentsPage() {
                       month: "short",
                       year: "numeric",
                     })}
+                  </td>
+                  <td className="px-4 py-3">
+                    {confirmDeleteId === t.id ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(t.id)}
+                          disabled={deleting}
+                          className="rounded px-2 py-1 text-xs font-bold text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 transition"
+                        >
+                          {deleting ? <Loader2 size={12} className="animate-spin" /> : "Confirm"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDeleteId(null)}
+                          disabled={deleting}
+                          className="rounded px-2 py-1 text-xs font-semibold text-[#61705d] hover:bg-[#f5f7f2] transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setConfirmDeleteId(t.id)}
+                        className="rounded p-1.5 text-[#a0a9a0] hover:bg-red-50 hover:text-red-500 transition"
+                        title="Delete submission"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
