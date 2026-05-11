@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   FileText,
@@ -90,6 +90,34 @@ const initialForm = (): FormState => ({
   pricingCurrency: "NGN",
   pricingDesc: "",
 });
+
+// ─── Sub-components (must be outside CreateHubPage to keep stable identity) ───
+
+const SectionCard = ({ id, children }: { id: string; children: React.ReactNode }) => (
+  <div id={id} className="rounded-2xl border border-[#dfe6d7] bg-white p-6 sm:p-8">
+    {children}
+  </div>
+);
+
+const SectionTitle = ({
+  icon: Icon,
+  label,
+  index,
+}: {
+  icon: (typeof SECTIONS)[number]["icon"];
+  label: string;
+  index: number;
+}) => (
+  <div className="mb-6 flex items-center gap-3">
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#006b85] text-sm font-bold text-white">
+      {index + 1}
+    </span>
+    <div className="flex items-center gap-2">
+      <Icon className="text-[#006b85]" size={18} />
+      <h2 className="text-base font-black text-[#172018]">{label}</h2>
+    </div>
+  </div>
+);
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -223,32 +251,6 @@ export default function CreateHubPage() {
         ? "border-red-400 bg-red-50"
         : "border-[#a8d8e6] focus:border-[#009fc3]"
     }`;
-
-  const SectionCard = ({ id, children }: { id: string; children: React.ReactNode }) => (
-    <div id={id} className="rounded-2xl border border-[#dfe6d7] bg-white p-6 sm:p-8">
-      {children}
-    </div>
-  );
-
-  const SectionTitle = ({
-    icon: Icon,
-    label,
-    index,
-  }: {
-    icon: (typeof SECTIONS)[number]["icon"];
-    label: string;
-    index: number;
-  }) => (
-    <div className="mb-6 flex items-center gap-3">
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#006b85] text-sm font-bold text-white">
-        {index + 1}
-      </span>
-      <div className="flex items-center gap-2">
-        <Icon className="text-[#006b85]" size={18} />
-        <h2 className="text-base font-black text-[#172018]">{label}</h2>
-      </div>
-    </div>
-  );
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (

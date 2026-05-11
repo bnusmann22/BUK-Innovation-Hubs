@@ -14,8 +14,10 @@ import {
   RefreshCw,
   Search,
   Loader2,
+  Download,
 } from "lucide-react";
 import { getHubs, type Hub } from "@/lib/hubs";
+import { exportHubsToXlsx } from "@/lib/exportHubs";
 
 function HubStatusBadge({ isActive }: { isActive: boolean }) {
   return (
@@ -114,6 +116,16 @@ export default function ManageHubsPage() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [showSuccess, setShowSuccess] = useState(justCreated);
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      exportHubsToXlsx(hubs);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const fetchHubs = async () => {
     setLoading(true);
@@ -170,13 +182,30 @@ export default function ManageHubsPage() {
               : "No hubs yet — create your first hub."}
           </p>
         </div>
-        <Link
-          href="/dashboard/add-hub"
-          className="inline-flex items-center gap-2 rounded-lg bg-[#1b5e2b] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#154a22]"
-        >
-          <Plus size={16} />
-          Add Hub
-        </Link>
+        <div className="flex items-center gap-2">
+          {hubs.length > 0 && (
+            <button
+              type="button"
+              onClick={handleExport}
+              disabled={exporting}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#dfe6d7] bg-white px-5 py-2.5 text-sm font-bold text-[#172018] shadow-sm transition hover:bg-[#f5f7f2] disabled:opacity-50"
+            >
+              {exporting ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Download size={16} />
+              )}
+              Export XLSX
+            </button>
+          )}
+          <Link
+            href="/dashboard/add-hub"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#1b5e2b] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#154a22]"
+          >
+            <Plus size={16} />
+            Add Hub
+          </Link>
+        </div>
       </div>
 
       {/* Search + Refresh */}

@@ -3,7 +3,11 @@
     "allow": [
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\" -Force)",
       "Bash(Select-Object -Property Name, PSIsContainer)",
-      "Bash(docker-compose -f \"C:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\docker-compose.yml\" up -d postgres)"
+      "Bash(docker-compose -f \"C:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\docker-compose.yml\" up -d postgres)",
+      "WebFetch(domain:www.buk.edu.ng)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\OPOLO\\Desktop\\BUK-Innovation-Hubs\\apps\\dashboard\\src\\app\\api\\talents"
     ]
   }
 }
