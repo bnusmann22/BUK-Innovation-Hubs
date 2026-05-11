@@ -6,7 +6,7 @@ export interface AuthRequest extends Request {
   user?: JwtPayload;
 }
 
-export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const verifyToken = (req: AuthRequest, _res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
