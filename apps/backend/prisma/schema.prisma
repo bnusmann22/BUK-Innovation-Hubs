@@ -304,8 +304,6 @@ model ContactInquiry {
 
   @@map("contact_inquiries")
 }
-<<<<<<< HEAD
-=======
 
 // ============================================================
 // AUDIT LOG
@@ -363,4 +361,3 @@ model AuthSession {
   @@index([expiresAt])
   @@map("auth_sessions")
 }
->>>>>>> main
