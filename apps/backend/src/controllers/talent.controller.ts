@@ -21,7 +21,9 @@ export const list = async (_req: Request, res: Response, next: NextFunction) => 
 
 export const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await deleteTalent(req.params.id);
+    const idParam = req.params.id;
+    const id = Array.isArray(idParam) ? idParam[0] : idParam;
+    await deleteTalent(id);
     return res.status(200).json({ status: "success", message: "Talent profile deleted" });
   } catch (error) {
     return next(error);
