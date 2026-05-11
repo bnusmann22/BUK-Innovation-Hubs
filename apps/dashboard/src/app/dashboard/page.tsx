@@ -187,6 +187,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <button
+              href="/dashboard/manage-hub"
               className="rounded-md border border-[#a8d8e6] px-3 py-2 text-sm font-bold text-[#006b85] transition hover:border-[#009fc3]"
               type="button"
             >

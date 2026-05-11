@@ -1,9 +1,35 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LoginComponent from "../components/LoginComponent";
 import Logo from "@repo/ui/logo";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f0f9fc]">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-[#006b85] border-t-transparent" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <main className="grid min-h-screen bg-[#f0f9fc] text-[#0c3b4a] lg:grid-cols-[1.05fr_0.95fr]">
       <section className="flex min-h-[42vh] flex-col justify-between bg-[#006b85] p-6 text-white sm:p-10 lg:min-h-screen">

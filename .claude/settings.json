@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(dir \"c:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\" /B)",
+      "Bash(dir \"c:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\apps\\\\backend\" /B)",
+      "Bash(DATABASE_URL=\"postgresql://placeholder:placeholder@localhost:5432/placeholder\" npx --prefix apps/backend prisma generate --schema apps/backend/prisma/schema.prisma)",
+      "Bash(npx tsc *)",
+      "Bash(DATABASE_URL=\"postgresql://placeholder:placeholder@localhost:5432/placeholder\" npx tsc --noEmit)",
+      "Bash(npm install *)",
+      "Bash(DATABASE_URL=\"postgresql://placeholder:placeholder@localhost:5432/placeholder\" node -e \"const {z} = require\\('zod'\\); const s = z.object\\({x: z.array\\(z.string\\(\\)\\).optional\\(\\).default\\([]\\)}\\); console.log\\(s.parse\\({}\\)\\)\")",
+      "Bash(dir \"C:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\apps\\\\dashboard\\\\src\\\\app\\\\dashboard\\\\add-hub\")",
+      "Bash(dir \"C:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\apps\\\\backend\\\\src\\\\services\")",
+      "Bash(dir \"C:\\\\Users\\\\OPOLO\\\\Desktop\\\\BUK-Innovation-Hubs\\\\apps\\\\backend\\\\src\\\\controllers\")"
+    ]
+  }
+}

@@ -1,15 +1,15 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-// 
+// ============================================================
 // ENUMS
-//
+// ============================================================
 
 enum Role {
   SUPER_ADMIN
@@ -51,9 +51,28 @@ enum InquiryStatus {
   RESOLVED
 }
 
-// 
+enum AnnouncementCategory {
+  FUNDING
+  INTERNSHIP
+  GRANT
+  PARTNERSHIP
+  CAMPUS_NEWS
+  GENERAL
+}
+
+enum StartupStage {
+  IDEA
+  PROTOTYPE
+  MVP
+  GROWTH
+  SCALING
+}
+
+// ============================================================
 // USER (Admin System)
-// 
+// SUPER_ADMIN -> hubId is null (system-wide access)
+// All other roles -> hubId required (hub-scoped access)
+// ============================================================
 
 model User {
   id        String   @id @default(uuid())
@@ -62,20 +81,26 @@ model User {
   password  String
   role      Role     @default(CONTENT_MANAGER)
   isActive  Boolean  @default(true)
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // relations
-  hubId      String?
-  hub        Hub?  @relation("HubStaff", fields: [hubId], references: [id])
+  // Hub scope - null for SUPER_ADMIN only
+  hubId String?
+  hub   Hub?    @relation("HubStaff", fields: [hubId], references: [id])
+
+  // Only populated for HUB_MANAGER
   managedHub Hub? @relation("HubManager")
+
+  auditLogs    AuditLog[]
+  authSessions AuthSession[]
 
   @@map("users")
 }
 
-// 
+// ============================================================
 // HUB
-// Each hub represents a regional center that manages its own programs and events.
+// ============================================================
 
 model Hub {
   id           String   @id @default(uuid())
@@ -83,38 +108,59 @@ model Hub {
   slug         String   @unique
   description  String
   focusArea    String
+  location     String?
+  logo         String?
   contactEmail String?
+  contactPhone String?
+  socialLinks  Json?
+  facilities   String[]
+  gallery      String[]
+  pricing      Json?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // relations
-  managerId String?  @unique
-  manager   User?    @relation("HubManager", fields: [managerId], references: [id])
-  staff     User[]   @relation("HubStaff")
-  programs  Program[]
-  events    Event[]
+  managerId String? @unique
+  manager   User?   @relation("HubManager", fields: [managerId], references: [id])
+
+  staff         User[]         @relation("HubStaff")
+  programs      Program[]
+  events        Event[]
+  startups      Startup[]
+  announcements Announcement[]
 
   @@map("hubs")
 }
 
-model Program {
-  id          String      @id @default(uuid())
-  title       String
-  description String
-  type        ProgramType
-  deadline    DateTime
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+// ============================================================
+// PROGRAM
+// ============================================================
 
-  // relations
+model Program {
+  id            String      @id @default(uuid())
+  title         String
+  description   String
+  type          ProgramType
+  eligibility   String?
+  maxApplicants Int?
+  deadline      DateTime
+  isActive      Boolean     @default(true)
+  isPublished   Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
   hubId         String
   hub           Hub                   @relation(fields: [hubId], references: [id])
   registrations ProgramRegistration[]
 
   @@map("programs")
 }
+
+// ============================================================
+// PROGRAM REGISTRATION
+// Public users apply - no account needed.
+// documents[] stores file URLs from cloud storage.
+// ============================================================
 
 model ProgramRegistration {
   id        String            @id @default(uuid())
@@ -123,15 +169,20 @@ model ProgramRegistration {
   phone     String?
   status    ApplicationStatus @default(PENDING)
   documents String[]
+  notes     String?
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
-  // relations
   programId String
   program   Program @relation(fields: [programId], references: [id])
 
   @@map("program_registrations")
 }
+
+// ============================================================
+// EVENT
+// hubId optional - null means system-wide BUK event
+// ============================================================
 
 model Event {
   id          String    @id @default(uuid())
@@ -145,13 +196,16 @@ model Event {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  // relations
   hubId         String?
   hub           Hub?                @relation(fields: [hubId], references: [id])
   registrations EventRegistration[]
 
   @@map("events")
 }
+
+// ============================================================
+// EVENT REGISTRATION
+// ============================================================
 
 model EventRegistration {
   id        String   @id @default(uuid())
@@ -160,28 +214,82 @@ model EventRegistration {
   phone     String?
   createdAt DateTime @default(now())
 
-  // relations
   eventId String
   event   Event  @relation(fields: [eventId], references: [id])
 
   @@map("event_registrations")
 }
 
+// ============================================================
+// STARTUP / INNOVATION SHOWCASE
+// Submitted by public, approved by admins.
+// ============================================================
+
+model Startup {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  founderName String
+  email       String?
+  phone       String?
+  stage       StartupStage @default(IDEA)
+  isFeatured  Boolean      @default(false)
+  isApproved  Boolean      @default(false)
+  demoUrl     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  hubId String?
+  hub   Hub?    @relation(fields: [hubId], references: [id])
+
+  @@map("startups")
+}
+
+// ============================================================
+// ANNOUNCEMENT / NEWS
+// hubId optional - null means platform-wide announcement
+// ============================================================
+
+model Announcement {
+  id          String               @id @default(uuid())
+  title       String
+  body        String
+  category    AnnouncementCategory
+  isPublished Boolean              @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  hubId String?
+  hub   Hub?    @relation(fields: [hubId], references: [id])
+
+  @@map("announcements")
+}
+
+// ============================================================
+// NEWSLETTER SUBSCRIBER
+// ============================================================
+
 model NewsletterSubscriber {
-  id                String   @id @default(uuid())
-  email             String   @unique
-  isVerified        Boolean  @default(false)
+  id                String    @id @default(uuid())
+  email             String    @unique
+  isVerified        Boolean   @default(false)
   verificationToken String?
-  subPrograms       Boolean  @default(true)
-  subStartups       Boolean  @default(true)
-  subEvents         Boolean  @default(true)
-  subGrants         Boolean  @default(true)
-  subInternships    Boolean  @default(true)
-  subAnnouncements  Boolean  @default(true)
-  createdAt         DateTime @default(now())
+  verifiedAt        DateTime?
+  subPrograms       Boolean   @default(true)
+  subStartups       Boolean   @default(true)
+  subEvents         Boolean   @default(true)
+  subGrants         Boolean   @default(true)
+  subInternships    Boolean   @default(true)
+  subAnnouncements  Boolean   @default(true)
+  createdAt         DateTime  @default(now())
 
   @@map("newsletter_subscribers")
 }
+
+// ============================================================
+// CONTACT INQUIRY
+// ============================================================
 
 model ContactInquiry {
   id        String        @id @default(uuid())
@@ -190,8 +298,69 @@ model ContactInquiry {
   subject   String
   message   String
   status    InquiryStatus @default(OPEN)
+  notes     String?
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
   @@map("contact_inquiries")
 }
+<<<<<<< HEAD
+=======
+
+// ============================================================
+// AUDIT LOG
+// Tracks all admin actions - PRD non-functional requirement
+// ============================================================
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+// ============================================================
+// TALENT PROFILE
+// Submitted publicly via the website talent discovery modal.
+// email is unique to prevent duplicate submissions.
+// ============================================================
+
+model TalentProfile {
+  id             String   @id @default(uuid())
+  name           String
+  department     String
+  regNumber      String
+  whatsappNumber String
+  email          String   @unique
+  skillset       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("talent_profiles")
+}
+
+model AuthSession {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("auth_sessions")
+}
+>>>>>>> main

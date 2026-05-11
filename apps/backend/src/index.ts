@@ -1,18 +1,25 @@
 import express, { Request, Response, NextFunction } from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
 import env from "./config/env";
 import router from "./routes/index";
 import { errorHandler } from "./middlewares/error.middleware";
 import { AppError } from "./types/error";
 import { requestLogger } from "./middlewares/logger.middleware";
+import seedSuperAdmin from "./seed/seed";
 
 const app = express();
+
+// CORS configuration
+const corsOptions: CorsOptions = {
+  origin: env.ALLOWED_ORIGINS,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // middleware
 app.use(requestLogger);
 app.use(helmet());
-app.use(cors({ origin: env.CLIENT_URL }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,8 +39,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // error middleware
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
+app.listen(env.PORT, async () => {
   console.log(`Server running on http://localhost:${env.PORT} in ${env.NODE_ENV} mode`);
+  await seedSuperAdmin();
 });
 
 export default app;

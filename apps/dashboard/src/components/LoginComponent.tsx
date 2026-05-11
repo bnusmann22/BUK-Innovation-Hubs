@@ -2,49 +2,53 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginComponent() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [errors, setErrors] = useState<{
-    email?: string;
-    password?: string;
-  }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   function validate() {
-    const newErrors: typeof errors = {};
+    const errors: { email?: string; password?: string } = {};
 
-    // Institutional email check (example: buk.edu.ng)
     if (!email) {
-      newErrors.email = "Email is required";
+      errors.email = "Email is required";
     } else if (!email.endsWith("@buk.edu.ng")) {
-      newErrors.email = "Use your institutional email (e.g. @buk.edu.ng)";
+      errors.email = "Use your institutional email (e.g. @buk.edu.ng)";
     }
 
-    // Password validation
     if (!password) {
-      newErrors.password = "Password is required";
+      errors.password = "Password is required";
     } else if (password.length < 4) {
-      newErrors.password = "Password must be at least 4 characters";
+      errors.password = "Password must be at least 4 characters";
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(errors).length === 0;
   }
 
-  function handleLogin(event: FormEvent<HTMLFormElement>) {
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setServerError("");
 
     if (!validate()) return;
 
-    // If valid → proceed
-    router.push("/dashboard");
+    setIsSubmitting(true);
+    try {
+      await login(email, password);
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : "Login failed");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -72,15 +76,16 @@ export default function LoginComponent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`mt-2 w-full rounded-md border px-4 py-3 text-sm outline-none transition ${
-                  errors.email
-                    ? "border-red-500 bg-red-50 focus:ring-red-200"
-                    : "border-[#a8d8e6] bg-[#f0f9fc] focus:border-[#009fc3] focus:ring-4 focus:ring-[#009fc3]/10"
+                  !email && !serverError
+                    ? "border-[#a8d8e6] bg-[#f0f9fc] focus:border-[#009fc3] focus:ring-4 focus:ring-[#009fc3]/10"
+                    : "border-red-500 bg-red-50 focus:ring-red-200"
                 }`}
                 type="email"
                 placeholder="admin@buk.edu.ng"
+                disabled={isSubmitting}
               />
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+              {!email && !serverError && (
+                <p className="mt-1 text-xs text-red-500">Email is required</p>
               )}
             </label>
 
@@ -93,11 +98,12 @@ export default function LoginComponent() {
                   onChange={(e) => setPassword(e.target.value)}
                   type={showPassword ? "text" : "password"}
                   className={`w-full rounded-md border px-4 py-3 pr-12 text-sm outline-none transition ${
-                    errors.password
-                      ? "border-red-500 bg-red-50 focus:ring-red-200"
-                      : "border-[#a8d8e6] bg-[#f0f9fc] focus:border-[#009fc3] focus:ring-4 focus:ring-[#009fc3]/10"
+                    !password && !serverError
+                      ? "border-[#a8d8e6] bg-[#f0f9fc] focus:border-[#009fc3] focus:ring-4 focus:ring-[#009fc3]/10"
+                      : "border-red-500 bg-red-50 focus:ring-red-200"
                   }`}
                   placeholder="Enter your password"
+                  disabled={isSubmitting}
                 />
 
                 <button
@@ -110,19 +116,30 @@ export default function LoginComponent() {
                 </button>
               </div>
 
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.password}
-                </p>
+              {!password && !serverError && (
+                <p className="mt-1 text-xs text-red-500">Password is required</p>
               )}
             </label>
 
+            {serverError && (
+              <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
+                {serverError}
+              </div>
+            )}
+
             <button
-              className="w-full rounded-md bg-[#009fc3] px-4 py-3 text-sm font-black text-white transition hover:bg-[#0088a6] disabled:opacity-50"
+              className="w-full rounded-md bg-[#009fc3] px-4 py-3 text-sm font-black text-white transition hover:bg-[#0088a6] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               type="submit"
-              disabled={!email || !password}
+              disabled={isSubmitting || !email || !password}
             >
-              Sign in to dashboard
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Sign in to dashboard"
+              )}
             </button>
           </form>
         </div>

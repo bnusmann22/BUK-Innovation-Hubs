@@ -15,7 +15,7 @@ export default function GallerySection() {
                   key={item.id}
                   className="rounded-lg overflow-hidden border border-[#dfe6d7] hover:shadow-lg transition group"
                 >
-                  <div className="relative h-64 overflow-hidden bg-gray-200">
+                  <div className="relative h-58 overflow-hidden bg-gray-200">
                     <img
                       src={item.image}
                       alt={item.title}

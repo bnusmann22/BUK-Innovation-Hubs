@@ -20,34 +20,34 @@ export function HeroSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="inline-block px-4 py-2 bg-[#1b5e2b]/10 text-[#1b5e2b] rounded-full text-sm font-semibold mb-4">
+            <span className="inline-block px-3 py-1.5 bg-[#1b5e2b]/10 text-[#1b5e2b] rounded-full text-sm font-semibold mb-4">
               Transform Ideas Into Impact
             </span>
-            <h1 className="text-5xl md:text-6xl font-black text-[#172018] leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl font-black text-[#172018] leading-tight mb-6">
               Welcome to BUK Innovation Hubs
             </h1>
-            <p className="text-lg text-[#61705d] leading-relaxed mb-8 max-w-lg">
+            <p className="text-base md:text-lg text-[#61705d] leading-relaxed mb-8 max-w-xl">
               Your gateway to world-class innovation, entrepreneurship, and
               research opportunities. Connect with fellow innovators, access
               facilities, and transform your ideas into reality.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/hubs"
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-[#1b5e2b] px-6 py-3 text-base font-bold text-white hover:bg-[#154a22] transition"
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-[#1b5e2b] px-5 py-2.5 text-sm md:text-base font-bold text-white hover:bg-[#154a22] transition"
               >
                 Explore Hubs <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/programs"
-                className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-[#1b5e2b] px-6 py-3 text-base font-bold text-[#1b5e2b] hover:bg-[#1b5e2b]/5 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-[#1b5e2b] px-5 py-2.5 text-sm md:text-base font-bold text-[#1b5e2b] hover:bg-[#1b5e2b]/5 transition"
               >
                 Join Programs <ChevronRight className="w-5 h-5" />
               </Link>
@@ -113,7 +113,7 @@ export function ValuePropositionSection() {
 }
 
 export function FeaturedHubsSection() {
-  const hubs = ["AI & Robotics Hub", "Software Development Center", "Entrepreneurship Zone"];
+  const hubs = ["BUK-BOI Hub", "Software Development Center", "Entrepreneurship Zone"];
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -190,7 +190,7 @@ export function GallerySection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {HOME_GALLERY_ITEMS.map((item) => (
-            <div key={item.id} className="group relative rounded-lg overflow-hidden h-64 shadow-md hover:shadow-lg transition">
+            <div key={item.id} className="group relative rounded-lg overflow-hidden h-58 shadow-md hover:shadow-lg transition">
               <img src={item.image} alt={item.label} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
