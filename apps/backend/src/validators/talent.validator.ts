@@ -10,3 +10,5 @@ export const submitTalentSchema = z.object({
 });
 
 export type SubmitTalentInput = z.infer<typeof submitTalentSchema>;
+
+// under development, not yet implemented in the controller
