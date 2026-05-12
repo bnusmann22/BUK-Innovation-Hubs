@@ -3,7 +3,7 @@ import { prisma } from "../utils/prisma";
 import { AppError } from "../types/error";
 import { Role } from "../generated/prisma/enums";
 import { sendHubAdminCredentials } from "../utils/email";
-import type { CreateHubInput } from "../validators/hub.validator";
+import type { CreateHubInput, UpdateHubInput } from "../validators/hub.validator";
 
 const WORDS = [
   "amber", "cedar", "delta", "ember", "frost", "grove", "haven", "ivory",
@@ -212,6 +212,84 @@ export const getAllHubs = async () => {
       },
       _count: { select: { staff: true, programs: true, events: true } },
     },
+  });
+};
+
+export const updateHub = async (id: string, input: UpdateHubInput, updatedBy: string) => {
+  const hub = await prisma.hub.findUnique({ where: { id } });
+  if (!hub) throw new AppError("Hub not found", 404);
+
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.hub.update({
+      where: { id },
+      data: input,
+      include: {
+        manager: { select: { id: true, name: true, email: true, imageUrl: true } },
+      },
+    });
+
+    await tx.auditLog.create({
+      data: {
+        action: "UPDATE_HUB",
+        entity: "Hub",
+        entityId: id,
+        metadata: { updatedFields: Object.keys(input) },
+        userId: updatedBy,
+      },
+    });
+
+    return updated;
+  });
+};
+
+export const deleteHub = async (id: string, deletedBy: string) => {
+  const hub = await prisma.hub.findUnique({ where: { id } });
+  if (!hub) throw new AppError("Hub not found", 404);
+
+  await prisma.$transaction(async (tx) => {
+    await tx.auditLog.create({
+      data: {
+        action: "DELETE_HUB",
+        entity: "Hub",
+        entityId: id,
+        metadata: { name: hub.name, slug: hub.slug },
+        userId: deletedBy,
+      },
+    });
+
+    await tx.hub.delete({ where: { id } });
+  });
+};
+
+export const assignHubManager = async (hubId: string, userId: string, assignedBy: string) => {
+  const hub = await prisma.hub.findUnique({ where: { id: hubId } });
+  if (!hub) throw new AppError("Hub not found", 404);
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new AppError("User not found", 404);
+  if (user.role !== Role.HUB_MANAGER) throw new AppError("User must have the HUB_MANAGER role", 400);
+  if (user.hubId !== hubId) throw new AppError("User does not belong to this hub", 400);
+
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.hub.update({
+      where: { id: hubId },
+      data: { managerId: userId },
+      include: {
+        manager: { select: { id: true, name: true, email: true, imageUrl: true } },
+      },
+    });
+
+    await tx.auditLog.create({
+      data: {
+        action: "ASSIGN_HUB_MANAGER",
+        entity: "Hub",
+        entityId: hubId,
+        metadata: { previousManagerId: hub.managerId, newManagerId: userId },
+        userId: assignedBy,
+      },
+    });
+
+    return updated;
   });
 };
 

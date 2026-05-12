@@ -10,6 +10,49 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+interface ProgramRegistrationConfirmation {
+  recipientName: string;
+  recipientEmail: string;
+  programTitle: string;
+  programType: string;
+}
+
+export async function sendProgramRegistrationConfirmation(data: ProgramRegistrationConfirmation) {
+  if (!process.env.SMTP_HOST) {
+    console.log(
+      `[EMAIL - skipped, SMTP not configured] Registration confirmation to: ${data.recipientEmail} | Program: ${data.programTitle}`,
+    );
+    return;
+  }
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f5f7f2; padding: 32px; border-radius: 8px;">
+      <div style="background: #006b85; padding: 24px; border-radius: 8px 8px 0 0; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">BUK Innovation Hubs</h1>
+        <p style="color: #d0f0ff; margin: 8px 0 0;">Application Received</p>
+      </div>
+      <div style="background: white; padding: 32px; border-radius: 0 0 8px 8px; border: 1px solid #dfe6d7; border-top: none;">
+        <p style="color: #172018; font-size: 16px;">Dear <strong>${data.recipientName}</strong>,</p>
+        <p style="color: #61705d;">Thank you for applying to the following program on the BUK Innovation Hubs platform:</p>
+        <div style="background: #f5f7f2; border: 1px solid #dfe6d7; border-radius: 8px; padding: 24px; margin: 24px 0;">
+          <h3 style="color: #006b85; margin: 0 0 8px;">${data.programTitle}</h3>
+          <p style="color: #61705d; margin: 0; text-transform: capitalize;">Type: ${data.programType.toLowerCase()}</p>
+        </div>
+        <p style="color: #61705d;">Your application is currently under review. You will be notified by email once a decision has been made.</p>
+        <hr style="border: none; border-top: 1px solid #dfe6d7; margin: 24px 0;"/>
+        <p style="color: #a0a9a0; font-size: 12px; margin: 0;">This is an automated message from BUK Innovation Hubs. Do not reply to this email.</p>
+      </div>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"BUK Innovation Hubs" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    to: data.recipientEmail,
+    subject: `Application Received - ${data.programTitle} | BUK Innovation Hubs`,
+    html,
+  });
+}
+
 interface HubAdminCredentials {
   recipientName: string;
   personalEmail: string;
@@ -52,7 +95,7 @@ export async function sendHubAdminCredentials(data: HubAdminCredentials) {
   await transporter.sendMail({
     from: `"BUK Innovation Hubs" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
     to: data.personalEmail,
-    subject: `Your Admin Access — ${data.hubName} | BUK Innovation Hubs`,
+    subject: `Your Admin Access - ${data.hubName} | BUK Innovation Hubs`,
     html,
   });
 }
