@@ -119,7 +119,7 @@ export function Sidebar() {
             {!collapsed && (
               <div className="flex-1 min-w-0">
                 <p className="truncate text-sm font-semibold">
-                  {user?.name || "Admin User"}
+                  {user?.name || "Admin User."}
                 </p>
                 <p className="truncate text-xs text-[#a8d8e6]">
                   {user?.email || "admin@buk.edu.ng"}
